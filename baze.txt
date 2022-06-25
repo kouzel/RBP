@@ -1,0 +1,250 @@
+
+3. Sta su domeni? Nabrojati relacione domene koje pdrzava SQL. 
+Domeni predstavljaju skupove vrednosti i sinonim su za tipove podataka. Relacioni domeni koje podrzava SQL su:
+- Brojevi
+- Niske karaktera
+- Niske bitova
+- Datumi
+- Vremena
+- Kombinacija datuma i vremena
+- Intervali godina/mesec
+- Intervali dan/vreme 
+
+4. Definisati relaciju, zaglavlje i telo relacije.
+Relacije su skupovi objekata sa kojima se barata u bazi podataka. Svaki od objekata Oi koji su u relaciji pripada nekom od domena Ti. 
+Za dati skup od n tipova, relacija nad tim tipovima se sastoji od zaglavlja i tela. 
+Zaglavlje relacije je skup od n atributa oblika Ai : Ti gde su Ai imena atributa relacije, a Ti odgovarajuca imena tipova (i=1,2,...,n). 
+Telo relacije je skup od m torki t gde je t skup komponenti oblika Ai : vi u kojima je vi vrednost tipa Ti (i=1,2,...,n).
+
+
+5. Dati definiciju relaciono kompletnog jezika.
+Jezik je relaciono kompletan ako je mocan kao i relaciona algebra, tj. ako bilo koja relacija predstavljiva u algebri moze da se predstavi i u tom jeziku.
+
+6. Sta predstavlja teorijsku osnovu relacionog racuna? 
+Teorijsku osnovu relacionog racuna predstavlja predikatski racun. 
+
+8. Sta predstavlja referencijalni ciklus? Koja SQL naredba je neophodna za njegovo formiranje? 
+Referencijalni ciklus je specijalni slucaj referencijalnog integriteta kod koga roditelj tabela i dete tabela predstavljaju istu tabelu, 
+ili se, u slucaju da u referencijalnom nizu postoji vise tabela, poslednja tabela referencijalnog niza referise na prvu tabelu.
+Ako u ciklusu ucestvuje samo jedna tabela tada se on moze formirati naredbom CREATE TABLE. U suprotnom, naredba koja je neophodna za formiranje 
+referncijalnog ciklusa je ALTER TABLE pomocu koje se definisu spoljasnji kljucevi kojima se zatvara referencijalni ciklus.
+
+
+11. Dati definiciju I, II i III normalne forme. Koje normalne forme pored ovih poznajete?
+- Relaciona promenljiva je u 1. normalnoj formi ako i samo ako u svakoj vazecoj vrednosti tog relvar-a svaka torka sadrzi tacno jednu vrednost za svaki atribut.
+- Relaciona promenljiva je u 2. normalnoj formi ako i samo ako je u 1. normalnoj formi i svaki nekljucni atribut je nereducibilno zavisan od primarnog kljuca
+- Relaciona promenljiva je u 3. normalnoj formi ako i samo ako je u 2. normalnoj formi i svaki nekljucni atribut je netranzitivno zavisan od primarnog kljuca 
+Postoje I, II, III, Bojs-Kodova, IV i V normalna forma.
+
+12. Dati definicije BCNF, 4NF i 5NF.
+- Relaciona promenljiva je u BCNF ako i samo ako svaka netrivijalna levo-nereducibilna FZ ima kandidat za kljuc kao svoju levu stranu.
+- Relaciona promenljiva R je u 4NF ako i samo ako je u BCNF i svaki put kada postoje podskupovi A i B atributa od R takvi da je zadovoljena 
+netrivijalna viseznacna zavisnost A -> -> B, tada su svi atributi od R takodje funkcionalno zavisni od A.
+- Relaciona promenljiva R je u 5NF ako i samo ako R je u 4NF i svaka netrivijalna zavisnost spajanja koja vazi u R je posledica kandidata za kljuc u R, gde:
+(a) Zavisnost spajanja *{A, B, ..., Z} u R je trivijalna akko je najmanje jedan od A, B, ..., Z skup svih atributa R.
+(b) Zavisnost spajanja *{A, B, ..., Z} u R je posledica kandidata za kljuc relvara R akko je svaki od A, B, ..., Z nadkljuc za R.
+
+
+12. Definisati pojam transakcije. Navesti i detaljnije opisati (ACID) osobine transakcija. Kada se za izvrsavanje skupa transakcija kaze da je serijalizovano?
+Transakcija je logicka jedinica posla. Svaka transakcija mora da poseduje sledece osobine:
+- Atomicnost. Transakcije su atomske - izvrsava se samo kompletan sadrzaj transakcije ili se ne izvrsava nista.
+- Konzistentnost. Transakcije cuvaju konzistentnost baze tako sto transformisu korektno stanje baze u drugo korektno stanje. Pri tome nije obavezno cuvanje korektnosti 
+stanja u svakom od medjukoraka izvrsavanja.
+- Izolacija. Transakcije su izolovane jedna od druge prilikom izvrsavanja.
+- Trajanje. Po potvrdjivanju transakcije promene ostaju u bazi, cak i u slucaju pada sistema.
+Izvrsavanje transakcija je serijalizovano ako se dobija isti rezultat kao da se te iste transakcije izvrsavaju jedna po jedna u unapred neodredenom redosledu izvrsavanja.
+
+
+15. Opisati dvofazni protokol zakljucavanja resursa.
+Dvofazni protokol zakljucavanja se izvrsava u skladu sa sledeim principima:
+- Pre rada sa bilo kojim objektom transakcija mora da zahteva i dobije katanac nad tim objektom.
+- Posle oslobadjanja katanca, transakcija nece vise zahtevati nikakve druge katance.
+Faze pri zakljucavanju resursa su:
+- Transakcija koja zeli da procita torku mora prvo da nad njom postavi S katanac
+- Transakcija koja zeli da azurira torku mora prvo da nad njom postavi X katanac. 
+Alternativno, ako vec dri S katanac nad tom torkom, transakcija mora da zahteva unapredjenje S katanca u X katanac
+- Ako je zahtev za postavljanjem katanca od strane transakcije B odbijen jer je u konfliktu sa vec postavljenim katancem 
+od strane transakcije A, transakcija B ide u stanje cekanja. B eka dok A ne oslobodi kljuc.
+- X katanac se zadrzava do kraja transakcije (COMMIT ili ROLLBACK). S kljuc se, uobicajeno, zadrzava (najduze) do kraja transakcije.
+
+
+
+17. Opisite nacin kontrole oporavka u distribuiranim bazama podataka.
+Kontrola oporavka u distribuiranim bazama podataka moze da bude sprovedena na sledeci nacin:
+Neka je distribuirani sistem zasnovan na mehanizmu zakljucavnja. Funkciju koordinatora vrsi sistem na kome je upit postavljen. 
+kooridnator komunicira sa svkaom lokacijom i naredjuje sta treba da se izvrsi. Smatra se da je trasakcija izvrsena ako je na svim lokacijama uspesno uradjeno potvrdjivanje tj. izvrsen COMMIT. 
+Da li je transakcija potvrdjena na svim lokacijama odredjuje koordinator na osnovu poruka koje dobija od lokacija u distribuiranom sistemu na jedan od sledeca dva nacina:
+- ako lokacija ne posalje nikakvu poruku kooridinatoru pretpostavlja se COMMIT (pretpostavljeni COMMIT)
+- ako lokacija ne posalje nikakvu poruku kooridinatoru pretpostavlja se COMMIT (pretpostavljeni COMMIT)
+
+
+18. Definisati pojam arhitektura sistema baza podataka. Opisati ANSI/SPARC arhitekturu baze podataka.
+Arhitektura sistema baza podataka je apstraktni opis njegovih komponenti i njihovih interakcija.
+Prema ANSI/SPARC grupi arhitektura baze podataka sadrzi tri nivoa:
+- Spoljacnji nivo koji definice nacin na koji individualni korisnik vidi podatke iz baze. Svaki korisnik ima na raspolaganju 
+maticni jezik u koji se ugradjuje jezik podataka pomo cu koga moze da vrci operacije nad podacima iz baze.
+- Konceptualni nivo predstavlja ukupni informacioni kontekst baze podataka u obliku koji je na necto vicem nivou u poredjenju 
+sa nacinom kako su podaci fizicki smecteni u bazi. Podaci se predstavljaju nezavisno od od upitnog jezika i od hardvera na kome se nalaze.
+- Unitracnji nivo koji predstavlja celokupnu bazu podataka na niskom nivou. Sastoji se od velikog broja razlicitih unutracnjih slogova. 
+Unutracnji izgled je definisan preko unutracnje sheme koja sadrzi ne samo definicije razlicitih slogova vec sadrzi i informacije o postojanju indeksa, 
+reprezentaciji sacuvanih polja, kako su fizicki smecteni sacuvani slogovi, itd.
+
+
+19. Cemu sluze utility programi? Nabrojite neki od njih.
+Utility programi su programi napisani od strane proizvodjaca softvera za upravljanje bazama podataka koji se koriste za razlicite administratorske poslove. 
+Ovi programi se mogu podeliti u dve grupe:
+ spoljasnji (ili samostalne) koji se koriste u aplikacijama specijalnih namena (npr. rad sa log datotekom, itd.)
+ unutrasnji (ili on-line)koji predstavljaju deo serverskog programa
+Neki od utility programa su LOAD, IMPORT, REORG, RUNSTATS...
+
+
+21. Navesti sve operatore relacione algebre koje poznajete.
+Operatori relacione algebre su:
+ Restrikcija (selekcija)
+ Projekcija
+ Proizvod
+ Unija
+ Presek
+ Razlika
+ (Prirodno) Spajanje
+ Delenje
+ Rename (operator promene imena)
+ Semijoin (poluspajanje)
+ Extend (prosirenje)
+ Summarize (operator sumiranja)
+
+
+23. Definisati pojam konkurentnosti u relacionim bazama podataka. Koje su prednosti konkurentnog rada?
+Termin konkuretnost oznacava cinjenicu da SUBP dopusta da vise od jednog programa (transakcije) istovremeno pristupa istim podacima.
+Prednosti konkurentnog rada su kra ce vreme odziva programa i pove canje broja programa koji mogu da zavrse obradu u istom vremenskom intervalu.
+
+24. Definisati mrtvu petlju i nacine za njeno otkrivanje i razresavanje. Da li je moguce (i ako jeste kako) oporaviti aplikaciju (program) koja je prekinuta zbog mrtve petlje?
+Mrtva petlja je situacija kada dve ili vise transakcija imaju postavljen katanac nad istim resursom sa nivoom zakljucavanja koji onemogu cava drugu transakciju da obavi zeljenu operaciju 
+nad tim resurtsom i nastavi sa radom. Ovakva situacija moze da se otkrije na razlicite nacine od kojih se najces ce koristi nacin pomo cu grafa cekanja. Mrtva petlja se razresava tako sto 
+se bar jedna od transakcija izabere kao zrtva ciji se efekat izvrsavanja ponistava. Na taj nacin se oslobode resursi koje je ta transakcija drzala i omogu cava nastavak rada ostalim 
+transakcijama koje dobijaju oslobodjene resurse. 
+Postupak za oporavak aplikacije prekinute zbog mrtve petlje je skok na pocetak transakcije koja je bila u toku kada je prekinuta i njeno ponovno izvrsavanje.
+
+25. Ukratko opisati nacin funkcionisanja log protokola pisanje unapred.
+Log protokol pisanje unapred predstavlja protokol kojim se u log datoteci zapisuju promene u relacionoj bazi podataka. Pri tome se zapis promena u bazi i zapis u log datoteku (o tim promenama)
+ posmatraju kao dve odvojene operacije. Pre bilo kakvih promena u bazi podataka sve informacije o tim promenama moraju da se upisu u log datoteku. Tek ako je upis u log datoteku uspesno obavljen,
+ preduzima se odgovaraju ca akcija nad bazom podataka. Takodje, pre potvrde transakcije svi log slogovi moraju da se upiu u fizicki log na disku.
+
+26. Opisati ARIES algoritam.
+ARIES algoritam je jedan od algoritama koji se koristi za oporavak sistema u slucaju pojave greske. ARIES funkcionise na slede ci nacin: formiraju se dve liste transakcija: ponovljene i ponistene. 
+U listu ponistenih inicijalno se upisuju sve transakcije koje su postojale u poslednjem uzetom kontrolnom slogu, dok je lista ponovljenih inicijalno prazna.
+Pretrazuje log datoteka, pocevsi od poslednjeg kontrolnog sloga. Ako se naidje na pocetak transkacije T, tada se ona dodaje u listu ponistenih. 
+Ako je COMMIT pronadjen za transakciju T, tada se ona pomera iz liste ponistenih u listu ponovljenih. 
+Kada se dodje do kraja log datoteke liste ponovljenih i ponistenih sadrze transakcije koje treba ponoviti (tj. koje su uspesno zavrsile) odnosno cije efekte treba ponistiti 
+(tj. koje nisu uspesno zavrsile do trenutka pada sistema). padu sistema. U narednom koraku se krene od pozicije u log datoteci koja je odredjena pri formiranju listi i ponove se
+sve transakcije tako da stanje baze odgovara stanju u trenutku pada sistema. Nakon toga se log skenira unatrag i (u obrnutom redosledu) ponistavaju sve transakcije ciji sadrzaj nije potvrdjen.
+
+27. Koje nivoe izolacije kursora definise SQL standard?
+SQL standard definise sledece nivoe izolacije
+ READ UNCOMMITED
+ READ COMMITED
+ REPEATABLE READ
+
+27. Detaljno opisati nivoe izolacije kursora koji postoje u RSUBP DB2.
+Moguci nivoi izolacije u DB2 su:
+- RR = Repeatable Read,
+- RS = Read Stability,
+- CS = Cursor Stability (predefinisano),
+- UR = Uncommitted Read,
+- NC = No Commit (samo na i seriji).
+
+
+28. Na koji nacin (po standardu) moze biti narusena serijalizabilnost transakcija?
+Prema SQL standardu, serializabilnost transakcija moze biti narusena kada se ne radi sa najvecim nivoom izolovanosti na sledeca tri nacina:
+- Prljavo citanje (eng. dirty read). Transakcija T1 azurira neki slog, transakcija T2 cita taj slog a zatim T1 ponisti promene. 
+T2 je procitala slog koji ne postoji niti je formalno ikada postojao.
+- Neponovljeno citanje (eng. nonrepeatable read). T1 cita slog, T2 azurira taj slog i T1 cita "isti" slog ponovo.
+- Fantomi (eng. phantoms). Neka T1 cita skup slogova koji zadovoljavaju neki uslov. Neka T2 unese novi slog koji zadovoljava isti uslov. A
+ko T1 sada ponovi zahtev vide ce slog koji ranije nije postojao fantomski slog.
+
+
+31. Ukratko opisati faze u optimizaciji upita.
+Pri optimizaciji upita se mogu izdvojiti slede ce faze:
+- Prevodjenje upita na interni zapis. Pocetni upit se prevodi u internu reprezentaciju koja je pogodnija za obradu u racunaru. 
+Obicno se za predstavljanje koristi drvo upita ili drvo apstraktne sintakse
+- Konverzija upita u kanonicki oblik. SQL upiti se dovode na (ekvivalentan) oblik koji je jednostavniji i efikasniji za primenu.
+- Izbor kandidata za procedure niskog nivoa. Osnovna strategija je posmatranje izraza koji predstavlja upit kao niza operacija niskog nivoa 
+(spajanje, projekcija, restrikcija...) izmedju kojih postoje odreene zavisnosti. Za svaku od operacija niskog nivoa optimizator 
+ima na raspolaganju skup predefinisanih procedura za njihovu implementaciju. Svaka procedura ima pridruzenu formulu za odredjivanje cene kostanja, 
+obicno u zavisnosti od U/I operacija na disku, CPU vremena, velicine medjurezultata,... 
+Na osnovu informacija iz kataloga o teku cem stanju baze i medjusobnih zavisnosti operacija niskog nivoa optimizator bira jednu ili vise procedura za implementaciju svake od operacija niskog nivoa.
+- Formiranje planova upita i izbor najjeftinijeg. Na osnovu predlozenog skupa procedura niskog nivoa, formira se skup kandidata za plan upita izmedju kojih se bira najbolji (tj. najjevtiniji).
+
+
+#################
+FJA
+
+
+create function da.bolji_od_proseka(predmetid integer)
+returns varchar(4000)
+return
+select listagg(ime ||';'|| prezime ||';'|| prosek ) within group( order by prosek desc)
+from (
+select d.ime , d.prezime , dec(avg(ocena*1.0),4,2) prosek
+from da.dosije d join da.ispit i
+on d.indeks=i.indeks and ocena>5 and status='o'
+group by d.indeks, d.ime, d.prezime
+having avg(ocena*1.0) >= (select avg(i2.ocena*1.0) - stddev(ocena*1.0)
+ from da.ispit i2
+where i2.ocena>5 and i2.status='o'
+ and i2.idpredmeta=predmetid)
+ );
+*Namerno je stavljeno >=, a treba >, tj. avg(ocena*1.0) > ...
+
+--primeri upotrebe
+values da.bolji_od_proseka(2273); --Masinsko ucenj
+
+
+##
+algebra
+
+define alias p1 for predmet
+define alias p2 for predmet
+define alias p3 for predmet
+p3[naziv, espb]
+minus ((p1 times p2) where p1.espb < p2.espb)[p1.naziv, p1.espb]
+
+
+
+(ispit where ocena>5)[indeks, skgodina, idpredmeta]
+divideby
+predmet[idpredmeta]
+
+
+racun
+
+Izdvojiti indekse studenata koji su polagali sve predmete.
+range of dx is dosije
+range of px is predmet
+range of ix is ispit
+dx.indeks
+where forall px(exists ix(ix.indeks=dx.indeks and ix.idpredmeta=px.idpredmeta))
+
+ili
+
+dx.indeks
+where not exists px( not exists ix(ix.indeks=dx.indeks and ix.idpredmeta=px.idpredmeta))
+
+Izdvojiti nazive predmeta koje su polagali svi studenti.
+range of dx is dosije
+range of px is predmet
+range of ix is ispit
+px.naziv
+where forall dx(exists ix(ix.indeks=dx.indeks and ix.idpredmeta=px.idpredmeta))
+
+triger
+--create trigger promena_espb before update of espb on da.predmet
+--referencing old as staro new as novo
+--for each row 
+--begin atomic
+-- set novo.espb= case 
+--                       when staro.espb > novo.espb then staro.espb-1
+--                       when staro.espb < novo.espb then staro.espb+1
+--                       else staro.espb
+--                     end;  
+--end@
